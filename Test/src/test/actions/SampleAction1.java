@@ -9,7 +9,10 @@ package test.actions;
 //import org.eclipse.jdt.core.JavaCore;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -220,30 +223,16 @@ public class SampleAction1 implements IWorkbenchWindowPulldownDelegate {
 			project.setDescription(description, null);
 
 			javaProject = JavaCore.create(project);
-			javaProject.setOutputLocation(mkdir("bin", project).getFullPath(),
-					null);
+			javaProject.setOutputLocation(mkdir("bin", project).getFullPath(),	null);
 
-			List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
-			IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
-			LibraryLocation[] locations = JavaRuntime.getLibraryLocations(vmInstall);
-			for (LibraryLocation element : locations) {
-				entries.add(JavaCore.newLibraryEntry(
-						element.getSystemLibraryPath(), null, null));
-			}
-			// add libs to project class path
-			
+
 			IFolder src = mkdir("src", project);
-		
-			javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), null);
-
-			
+			IClasspathEntry[] entriess = new IClasspathEntry[2];
 			
 			IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(src);
-			IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-			IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
-			System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
-			newEntries[oldEntries.length] = JavaCore.newSourceEntry(root.getPath());
-			javaProject.setRawClasspath(newEntries, null);
+			entriess[0] = JavaCore.newSourceEntry(root.getPath());
+			entriess[1] = JavaRuntime.getDefaultJREContainerEntry();
+			javaProject.setRawClasspath(entriess, null);
 			
 		} catch (CoreException ex) {
 			ex.printStackTrace();
