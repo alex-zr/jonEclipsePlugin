@@ -1,20 +1,7 @@
 package test.actions;
 
-//import org.eclipse.core.resources.IFolder;
-//import org.eclipse.core.resources.IProjectDescription;
-//import org.eclipse.core.resources.IWorkspaceRoot;
-//import org.eclipse.core.resources.ResourcesPlugin;
-//import org.eclipse.core.runtime.CoreException;
-//import org.eclipse.jdt.core.IJavaProject;
-//import org.eclipse.jdt.core.JavaCore;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -28,9 +15,7 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
-import org.eclipse.jdt.launching.LibraryLocation;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
@@ -40,19 +25,15 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 /**
@@ -63,13 +44,13 @@ import org.eclipse.ui.texteditor.ITextEditor;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class SampleAction1 implements IWorkbenchWindowPulldownDelegate {
+public class MainAction implements IWorkbenchWindowPulldownDelegate {
 	private IWorkbenchWindow window;
 
 	/**
 	 * The constructor.
 	 */
-	public SampleAction1() {
+	public MainAction() {
 	}
 
 	/**
@@ -86,17 +67,15 @@ public class SampleAction1 implements IWorkbenchWindowPulldownDelegate {
 		}
 
 		MessageDialog.openInformation(window.getShell(), "Jon", text);
-
 	}
 
 	public String getCurrentEditorContent() {
-		final IEditorPart editor = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-		if (!(editor instanceof ITextEditor))
+		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+		if (!(editor instanceof ITextEditor)) {
 			return null;
+		}
 		ITextEditor ite = (ITextEditor) editor;
-		IDocument doc = ite.getDocumentProvider().getDocument(
-				ite.getEditorInput());
+		IDocument doc = ite.getDocumentProvider().getDocument(ite.getEditorInput());
 		return doc.get();
 	}
 
@@ -142,7 +121,7 @@ public class SampleAction1 implements IWorkbenchWindowPulldownDelegate {
 				IProject project = root.getProject("test");
 				IJavaProject javaProject;
 				if (!project.exists()) {
-					javaProject = newJavaProject(project);
+					javaProject = createJavaProject(project);
 				} else {
 					javaProject = JavaCore.create(project);
 				}
@@ -213,7 +192,7 @@ public class SampleAction1 implements IWorkbenchWindowPulldownDelegate {
 	}
 
 
-	public IJavaProject newJavaProject(IProject project) {
+	public IJavaProject createJavaProject(IProject project) {
 		IJavaProject javaProject =  null;
 		try {
 			project.create(null);

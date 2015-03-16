@@ -20,7 +20,7 @@
          
                label="&amp;Sample Action1"
                icon="icons/sample.gif"
-               class="test.actions.SampleAction1"
+               class="test.actions.MainAction"
                tooltip="Hello, Eclipse world"
                menubarPath="sampleMenu/sampleGroup"
                toolbarPath="sampleGroup"
