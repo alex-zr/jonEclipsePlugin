@@ -41,7 +41,8 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 	 * The constructor.
 	 */
 	public MainAction() {
-		this.taskService = new TaskSelectService(); 
+		this.taskService = new TaskSelectService();
+		this.remoteService = new RemoteService();
 	}
 
 	/**
