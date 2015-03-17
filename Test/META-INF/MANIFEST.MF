@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Test
 Bundle-SymbolicName: Test;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: test.Activator
+Bundle-Activator: ua.com.jon.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.jdt.launching;bundle-version="3.7.1",
