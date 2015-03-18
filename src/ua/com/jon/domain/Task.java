@@ -1,15 +1,21 @@
 package ua.com.jon.domain;
 
 public class Task {
+	private String sprintName;
 	private String name;
 	private String code;
 	
 	public Task() {
 	}
 
-	public Task(String name, String code) {
+	public Task(String sprintName, String name, String code) {
+		this.sprintName = sprintName;
 		this.name = name;
-		this.code = code;
+		this.code = code;		
+	}
+	
+	public String getFullName() {
+		return sprintName + " " + name;
 	}
 
 	public String getName() {
@@ -28,8 +34,16 @@ public class Task {
 		this.code = code;
 	}
 
+	public String getSprintName() {
+		return sprintName;
+	}
+
+	public void setSprintName(String sprintName) {
+		this.sprintName = sprintName;
+	}
+	
 	@Override
 	public String toString() {
-		return "Task [name=" + name + ", code=" + code + "]";
+		return "Task [sprint =" + sprintName + ", name=" + name + ", code=" + code + "]";
 	}
 }

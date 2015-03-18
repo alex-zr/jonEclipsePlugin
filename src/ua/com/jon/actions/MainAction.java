@@ -3,14 +3,12 @@ package ua.com.jon.actions;
 import java.util.List;
 
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.ui.IEditorPart;
@@ -21,6 +19,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import ua.com.jon.domain.Sprint;
+import ua.com.jon.domain.Task;
+import ua.com.jon.service.ConsoleWriterService;
 import ua.com.jon.service.RemoteService;
 import ua.com.jon.service.TaskSelectService;
 
@@ -36,6 +36,8 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 	private IWorkbenchWindow window;
 	private TaskSelectService taskService;
 	private RemoteService remoteService;
+	private ConsoleWriterService consoleService;
+
 
 	/**
 	 * The constructor.
@@ -43,6 +45,7 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 	public MainAction() {
 		this.taskService = new TaskSelectService();
 		this.remoteService = new RemoteService();
+		this.consoleService = new ConsoleWriterService();
 	}
 
 	/**
@@ -52,16 +55,21 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		System.out.println(action.getStyle());
+//		System.out.println(action.getStyle());
 		String text = getCurrentEditorContent();
+		
+		
 		if (text == null) {
 			text = "Fooo";
 		}
 
-		MessageDialog.openInformation(window.getShell(), "Jon", text);
+		//MessageDialog.openInformation(window.getShell(), "Jon", text);
+		//Вывод в консоль
+		consoleService.write("You WIN!!", "100");
 	}
 
 	public String getCurrentEditorContent() {
+		
 		final IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 		if (!(editor instanceof ITextEditor)) {
 			return null;
@@ -99,37 +107,37 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
-
+	
 	@Override
 	public Menu getMenu(Control parent) {
 		List<Sprint> userSprints = remoteService.getUserSprints("login", "pass");
 		
 		Menu m = new Menu(parent);
-		MenuItem i = new MenuItem(m, SWT.DROP_DOWN);
-		Menu menuDebug = new Menu(m.getParent(), SWT.DROP_DOWN);
-		Menu m1 = new Menu(m);
-		MenuItem i2 = new MenuItem(menuDebug, 4);
-		i2.setText("33");
-		MenuItem i1 = new MenuItem(m, 4);
-		i1.setText("Bar");
-//		ExpandItem item0 = new ExpandItem (m, SWT.NONE);
 		
-		i.setText("Foo");
-		
-		i.addSelectionListener(new SelectionListener() {
+		for(Sprint sprint : userSprints) {
+			//Просто самый очевидный способ создания выпадающего меню....
+			MenuItem item = new MenuItem(m, SWT.CASCADE);//Обязательно CASCADE !
 			
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				taskService.handleSelectTask();
-				
-			}
+			item.setText(sprint.getName());
 			
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
-				// TODO Auto-generated method stub
+			Menu sub = new Menu(item);//Создание контейнера подменю
+			
+			item.setMenu(sub);//Связывание пункта меню и контейнера для подменю
+			
+			for(final Task task : sprint.getTasks()) {
+				//Создание понктов подменю с указанием контейнера
+				MenuItem subItem = new MenuItem(sub, SWT.CASCADE);// Не обязательно CASCADE..
+				subItem.setText(task.getName());
 				
+				subItem.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						taskService.createIfNotExist(window, "jon", task.getSprintName(), task.getName(), task.getCode());
+					}
+				});
+			
 			}
-		});
+		}	
 		return m;
 	}
 }
