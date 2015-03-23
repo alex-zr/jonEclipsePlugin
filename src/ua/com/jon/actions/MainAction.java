@@ -18,6 +18,7 @@ import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.texteditor.ITextEditor;
 
+import ua.com.jon.Activator;
 import ua.com.jon.domain.Sprint;
 import ua.com.jon.domain.Task;
 import ua.com.jon.service.ConsoleWriterService;
@@ -64,8 +65,12 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 		}
 
 		//MessageDialog.openInformation(window.getShell(), "Jon", text);
+		
+		//Работа с конфигом
+		String login = Activator.getDefault().getPreferenceStore().getString("login");
+		String password = Activator.getDefault().getPreferenceStore().getString("password");
 		//Вывод в консоль
-		consoleService.write("You WIN!!", "100");
+		consoleService.write("You WIN!!", login + " " + password + " 100");
 	}
 
 	public String getCurrentEditorContent() {
@@ -110,8 +115,12 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 	
 	@Override
 	public Menu getMenu(Control parent) {
-		List<Sprint> userSprints = remoteService.getUserSprints("login", "pass");
+		//Получение данных из конфига
+		String login = Activator.getDefault().getPreferenceStore().getString("login");
+		String password = Activator.getDefault().getPreferenceStore().getString("password");
 		
+		List<Sprint> userSprints = remoteService.getUserSprints(login, password);
+		System.out.println("getMenu(...)");
 		Menu m = new Menu(parent);
 		
 		for(Sprint sprint : userSprints) {

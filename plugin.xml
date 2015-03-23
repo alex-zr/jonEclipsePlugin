@@ -27,6 +27,20 @@
                id="com.jon.actions.SampleAction1">
          </action>
       </actionSet>
+      
    </extension>
-
+	<extension
+	      point="org.eclipse.ui.preferencePages">
+	      <page id="JonPluginTest"
+ 			name="Test page"
+    		class="ua.com.jon.preference.Test">
+   	</page>
+	</extension>
+	<extension
+	      point="org.eclipse.ui.preferencePages">
+	      <page id="JonPlugin"
+ 			name="Jon.com.ua"
+    		class="ua.com.jon.preference.Authorization">
+   	</page>
+	</extension>
 </plugin>
