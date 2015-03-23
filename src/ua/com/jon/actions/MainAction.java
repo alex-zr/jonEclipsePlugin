@@ -21,6 +21,7 @@ import org.eclipse.ui.texteditor.ITextEditor;
 import ua.com.jon.Activator;
 import ua.com.jon.domain.Sprint;
 import ua.com.jon.domain.Task;
+import ua.com.jon.preference.PreferenceConst;
 import ua.com.jon.service.ConsoleWriterService;
 import ua.com.jon.service.RemoteService;
 import ua.com.jon.service.TaskSelectService;
@@ -67,8 +68,8 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 		//MessageDialog.openInformation(window.getShell(), "Jon", text);
 		
 		//Работа с конфигом
-		String login = Activator.getDefault().getPreferenceStore().getString("login");
-		String password = Activator.getDefault().getPreferenceStore().getString("password");
+		String login = Activator.getDefault().getPreferenceStore().getString(PreferenceConst.LOGIN);
+		String password = Activator.getDefault().getPreferenceStore().getString(PreferenceConst.PASSWORD);
 		//Вывод в консоль
 		consoleService.write("You WIN!!", login + " " + password + " 100");
 	}
@@ -116,8 +117,8 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 	@Override
 	public Menu getMenu(Control parent) {
 		//Получение данных из конфига
-		String login = Activator.getDefault().getPreferenceStore().getString("login");
-		String password = Activator.getDefault().getPreferenceStore().getString("password");
+		String login = Activator.getDefault().getPreferenceStore().getString(PreferenceConst.LOGIN);
+		String password = Activator.getDefault().getPreferenceStore().getString(PreferenceConst.PASSWORD);
 		
 		List<Sprint> userSprints = remoteService.getUserSprints(login, password);
 		System.out.println("getMenu(...)");
@@ -141,7 +142,8 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 				subItem.addSelectionListener(new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						taskService.createIfNotExist(window, "jon", task.getSprintName(), task.getName(), task.getCode());
+						String projectName = Activator.getDefault().getPreferenceStore().getString(PreferenceConst.PROJECT);
+						taskService.createIfNotExist(window, projectName, task.getSprintName(), task.getName(), task.getCode());
 					}
 				});
 			

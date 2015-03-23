@@ -40,7 +40,12 @@
 	      point="org.eclipse.ui.preferencePages">
 	      <page id="JonPlugin"
  			name="Jon.com.ua"
-    		class="ua.com.jon.preference.Authorization">
+    		class="ua.com.jon.preference.Main">
+   			</page>
+   			<page id="JonPluginAuth"
+  	      	name="Authorization"
+	      	class="ua.com.jon.preference.Authorization"
+		category="JonPlugin">
    	</page>
 	</extension>
 </plugin>
