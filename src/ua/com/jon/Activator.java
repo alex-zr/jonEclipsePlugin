@@ -8,7 +8,9 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle
  */
 public class Activator extends AbstractUIPlugin {
+	
 	//Test commit123
+	//Test update
 	// The plug-in ID
 	public static final String PLUGIN_ID = "jonEclipsePlugin"; //$NON-NLS-1$
 
