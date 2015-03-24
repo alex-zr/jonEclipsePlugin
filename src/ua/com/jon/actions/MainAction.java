@@ -16,6 +16,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.IWorkbenchWindowPulldownDelegate;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.dialogs.PreferencesUtil;
 import org.eclipse.ui.texteditor.ITextEditor;
 
 import ua.com.jon.Activator;
@@ -121,7 +122,7 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 		String password = Activator.getDefault().getPreferenceStore().getString(PreferenceConst.PASSWORD);
 		
 		List<Sprint> userSprints = remoteService.getUserSprints(login, password);
-		System.out.println("getMenu(...)");
+		
 		Menu m = new Menu(parent);
 		
 		for(Sprint sprint : userSprints) {
@@ -146,9 +147,39 @@ public class MainAction implements IWorkbenchWindowPulldownDelegate {
 						taskService.createIfNotExist(window, projectName, task.getSprintName(), task.getName(), task.getCode());
 					}
 				});
-			
 			}
+			
+			
 		}	
+		
+		
+		new MenuItem(m, SWT.SEPARATOR); //Разделитель списка
+		MenuItem preference = new MenuItem(m, SWT.CASCADE);
+		//Пункт меню открывающий окно настроек
+		preference.setText("preferences");
+		
+		Menu prefMenu = new Menu(preference);
+		preference.setMenu(prefMenu);
+		
+		MenuItem mainPref = new MenuItem(prefMenu, SWT.PUSH);
+		mainPref.setText("Project");
+		mainPref.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				PreferencesUtil.createPreferenceDialogOn(window.getShell(), PreferenceConst.PROJECT_PREFERENCE_ID, null, null).open();
+			}
+		});
+		MenuItem authPref = new MenuItem(prefMenu, SWT.PUSH);
+		authPref.setText("Authorization");
+		
+		authPref.addSelectionListener(new SelectionAdapter() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				PreferencesUtil.createPreferenceDialogOn(window.getShell(), PreferenceConst.AUTH_PREFERENCE_ID, null, null).open();
+			}
+		});
 		return m;
 	}
 }
